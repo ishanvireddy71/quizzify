@@ -1,0 +1,486 @@
+{% extends "base.html" %}
+{% block title %}Quiz from Notes - Quizzify{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/create.css') }}">
+<style>
+  .input-mode-tabs {
+    display: flex;
+    gap: .5rem;
+    margin-bottom: 1.25rem;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    padding: .25rem;
+  }
+  .input-mode-tab {
+    flex: 1;
+    padding: .6rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: .9rem;
+    border: none;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text-secondary);
+    transition: var(--transition);
+  }
+  .input-mode-tab.active {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    box-shadow: var(--shadow);
+  }
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 3rem 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--bg-tertiary);
+  }
+  .upload-zone:hover, .upload-zone.dragover {
+    border-color: var(--accent-purple);
+    background: rgba(139,92,246,.07);
+  }
+  .upload-zone .upload-icon { font-size: 3rem; margin-bottom: .75rem; }
+  .upload-zone h3 { margin-bottom: .5rem; }
+  .upload-zone p { color: var(--text-secondary); font-size: .9rem; }
+  .upload-zone .or-divider {
+    margin: 1rem 0;
+    color: var(--text-muted);
+    font-size: .85rem;
+    display: flex; align-items: center; gap: .75rem;
+  }
+  .upload-zone .or-divider::before,
+  .upload-zone .or-divider::after {
+    content:''; flex:1; height:1px; background: var(--border);
+  }
+  #fileInput { display: none; }
+  .file-chosen {
+    display: none;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: rgba(34,197,94,.1);
+    border: 1px solid rgba(34,197,94,.3);
+    border-radius: var(--radius-sm);
+    margin-top: 1rem;
+  }
+  .file-chosen.visible { display: flex; }
+  .file-chosen .file-name { flex: 1; font-weight: 600; }
+  .file-chosen .remove-file {
+    color: var(--accent-red); background: none; border: none;
+    cursor: pointer; font-size: 1.2rem;
+  }
+  .notes-char-count {
+    text-align: right; font-size: .8rem; color: var(--text-muted); margin-top: .25rem;
+  }
+  .loading-overlay {
+    display: none;
+    position: fixed; inset: 0; background: rgba(0,0,0,.6);
+    z-index: 200; align-items: center; justify-content: center;
+  }
+  .loading-overlay.visible { display: flex; }
+  .loading-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 2.5rem; text-align: center;
+    min-width: 280px;
+  }
+  .spinner {
+    width: 48px; height: 48px; border: 4px solid var(--border);
+    border-top-color: var(--accent-purple); border-radius: 50%;
+    animation: spin 1s linear infinite; margin: 0 auto 1.25rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .extract-status {
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-sm);
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    display: none;
+  }
+  .extract-status.success {
+    display: block;
+    background: rgba(34,197,94,.1);
+    border: 1px solid rgba(34,197,94,.3);
+    color: #22c55e;
+  }
+  .extract-status.error {
+    display: block;
+    background: rgba(239,68,68,.1);
+    border: 1px solid rgba(239,68,68,.3);
+    color: #ef4444;
+  }
+</style>
+{% endblock %}
+{% block content %}
+
+<section class="page-header">
+  <h1 class="page-title">📝 Quiz from Notes</h1>
+  <p class="page-subtitle">Type your notes or upload a file — we'll generate a quiz automatically.</p>
+</section>
+
+<div class="create-tabs">
+  <a href="{{ url_for('create_quiz') }}" class="create-tab">Manual Creator</a>
+  <a href="{{ url_for('create_from_notes') }}" class="create-tab active">From Notes</a>
+</div>
+
+<section class="create-section">
+  <form id="notesForm" class="notes-form">
+
+    <div class="form-group">
+      <label>Quiz Title</label>
+      <input type="text" id="notesTitle" required maxlength="100" placeholder="e.g., Biology Chapter 3">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Category</label>
+        <select id="notesCategory" onchange="updateNotesSubcategories()" required>
+          <option value="">Select Category</option>
+          {% for cat in categories %}
+          <option value="{{ cat.id }}">{{ cat.icon }} {{ cat.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Subcategory</label>
+        <select id="notesSubcategory" required>
+          <option value="">Select Subcategory</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Difficulty</label>
+        <select id="notesDifficulty">
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Input mode switcher -->
+    <div class="form-group">
+      <label>Notes Input Method</label>
+      <div class="input-mode-tabs">
+        <button type="button" class="input-mode-tab active" onclick="switchInputMode('type')" id="tabType">
+          ✏️ Type Notes
+        </button>
+        <button type="button" class="input-mode-tab" onclick="switchInputMode('upload')" id="tabUpload">
+          📄 Upload File
+        </button>
+      </div>
+
+      <!-- Typing mode -->
+      <div id="typingMode">
+        <textarea id="notesText" rows="14"
+          placeholder="Paste or type your study notes here...&#10;&#10;Example:&#10;Photosynthesis is the process by which plants convert light energy into chemical energy. Chlorophyll is the pigment that captures light. The process occurs in the chloroplasts of plant cells. The light-dependent reactions produce ATP and NADPH. The Calvin cycle uses these to fix carbon dioxide into glucose."></textarea>
+        <div class="notes-char-count"><span id="charCount">0</span> characters</div>
+        <small>Minimum 50 characters. More sentences = more questions.</small>
+      </div>
+
+      <!-- Upload mode -->
+      <div id="uploadMode" style="display:none">
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+          <div class="upload-icon">📂</div>
+          <h3>Drop your file here</h3>
+          <p>Supports .txt, .md, .pdf (text-based), .docx</p>
+          <div class="or-divider">or</div>
+          <button type="button" class="btn btn-secondary btn-sm">Browse Files</button>
+          <input type="file" id="fileInput" accept=".txt,.md,.pdf,.docx,.text" onchange="handleFileSelect(event)">
+        </div>
+        <div class="file-chosen" id="fileChosen">
+          <span>📄</span>
+          <span class="file-name" id="fileName">—</span>
+          <button type="button" class="remove-file" onclick="removeFile()" title="Remove">✕</button>
+        </div>
+        <div class="extract-status" id="extractStatus"></div>
+        <small style="margin-top:.5rem;display:block">For .docx and .pdf, text will be extracted automatically.</small>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary" onclick="previewNotesQuiz()">👁 Preview Quiz</button>
+      <button type="submit" class="btn btn-primary btn-lg">✨ Generate Quiz</button>
+    </div>
+  </form>
+
+  <div id="previewSection" class="preview-section hidden">
+    <h3>Quiz Preview</h3>
+    <div id="previewContent"></div>
+    <div class="preview-actions">
+      <button class="btn btn-primary" onclick="confirmCreate()">✅ Create This Quiz</button>
+      <button class="btn btn-secondary" onclick="hidePreview()">✏️ Edit Notes</button>
+    </div>
+  </div>
+
+  <div id="createResult" class="create-result hidden">
+    <div style="font-size:3rem;margin-bottom:1rem">🎉</div>
+    <h3>Quiz Created Successfully!</h3>
+    <div style="display:flex;gap:1rem;justify-content:center;margin-top:1.5rem;flex-wrap:wrap">
+      <a id="createdQuizLink" href="" class="btn btn-primary btn-lg">▶ Take Your Quiz</a>
+      <a href="{{ url_for('create_from_notes') }}" class="btn btn-secondary">Create Another</a>
+    </div>
+  </div>
+</section>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-card">
+    <div class="spinner"></div>
+    <h3>Generating your quiz…</h3>
+    <p style="color:var(--text-secondary);margin-top:.5rem">Analysing notes & building questions</p>
+  </div>
+</div>
+
+<script type="application/json" id="categories-data">{{ categories|tojson }}</script>
+<script>
+const categoriesData = JSON.parse(document.getElementById('categories-data').textContent);
+let previewedQuiz = null;
+let currentInputMode = 'type';
+let uploadedFileText = '';
+let isFileExtracted = false;
+
+// ---- Subcategory update ----
+function updateNotesSubcategories() {
+  const catId = document.getElementById('notesCategory').value;
+  const subSelect = document.getElementById('notesSubcategory');
+  subSelect.innerHTML = '<option value="">Select Subcategory</option>';
+  const cat = categoriesData.find(c => c.id === catId);
+  if (cat) {
+    cat.subcategories.forEach(sub => {
+      const opt = document.createElement('option');
+      opt.value = sub.id;
+      opt.textContent = sub.icon + ' ' + sub.name;
+      subSelect.appendChild(opt);
+    });
+  }
+}
+
+// ---- Input mode switch ----
+function switchInputMode(mode) {
+  currentInputMode = mode;
+  document.getElementById('typingMode').style.display = mode === 'type' ? 'block' : 'none';
+  document.getElementById('uploadMode').style.display = mode === 'upload' ? 'block' : 'none';
+  document.getElementById('tabType').classList.toggle('active', mode === 'type');
+  document.getElementById('tabUpload').classList.toggle('active', mode === 'upload');
+}
+
+// ---- Char counter ----
+document.getElementById('notesText').addEventListener('input', function() {
+  document.getElementById('charCount').textContent = this.value.length;
+});
+
+// ---- File upload ----
+const uploadZone = document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('dragover'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) processFile(file);
+});
+
+function handleFileSelect(e) {
+  const file = e.target.files[0];
+  if (file) processFile(file);
+}
+
+// FIX: Upload file to server to extract text, then store the extracted text
+async function processFile(file) {
+  const allowed = ['.txt', '.md', '.text', '.pdf', '.docx'];
+  const ext = '.' + file.name.split('.').pop().toLowerCase();
+
+  if (!allowed.includes(ext)) {
+    alert('Supported formats: .txt, .md, .pdf, .docx');
+    return;
+  }
+
+  document.getElementById('fileName').textContent = file.name;
+  document.getElementById('fileChosen').classList.add('visible');
+  document.getElementById('extractStatus').style.display = 'none';
+  setLoading(true);
+
+  // For plain text files, read directly
+  if (ext === '.txt' || ext === '.md' || ext === '.text') {
+    const reader = new FileReader();
+    reader.onload = e => {
+      uploadedFileText = e.target.result;
+      isFileExtracted = true;
+      setLoading(false);
+      showExtractStatus('Text ready: ' + uploadedFileText.length + ' characters', 'success');
+    };
+    reader.readAsText(file);
+    return;
+  }
+
+  // For PDF/DOCX, upload to server for extraction
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+    const response = await fetch('/api/quiz/upload-file', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await response.json();
+
+    if (data.success) {
+      uploadedFileText = data.text;
+      isFileExtracted = true;
+      showExtractStatus('Text extracted: ' + uploadedFileText.length + ' characters', 'success');
+    } else {
+      isFileExtracted = false;
+      uploadedFileText = '';
+      showExtractStatus('Error: ' + (data.errors ? data.errors.join(', ') : 'Failed to extract text'), 'error');
+    }
+  } catch (err) {
+    isFileExtracted = false;
+    uploadedFileText = '';
+    showExtractStatus('Error: Failed to upload file', 'error');
+  }
+  setLoading(false);
+}
+
+function showExtractStatus(message, type) {
+  const status = document.getElementById('extractStatus');
+  status.textContent = message;
+  status.className = 'extract-status ' + type;
+  status.style.display = 'block';
+}
+
+function removeFile() {
+  uploadedFileText = '';
+  isFileExtracted = false;
+  document.getElementById('fileChosen').classList.remove('visible');
+  document.getElementById('fileInput').value = '';
+  document.getElementById('fileName').textContent = '—';
+  document.getElementById('extractStatus').style.display = 'none';
+}
+
+// ---- Get notes text (from either mode) ----
+function getNotesText() {
+  if (currentInputMode === 'type') {
+    return document.getElementById('notesText').value;
+  } else {
+    return uploadedFileText;
+  }
+}
+
+function validateForm() {
+  const title = document.getElementById('notesTitle').value.trim();
+  const category = document.getElementById('notesCategory').value;
+  const subcategory = document.getElementById('notesSubcategory').value;
+  const notes = getNotesText().trim();
+
+  if (!title) { alert('Please enter a quiz title.'); return false; }
+  if (!category) { alert('Please select a category.'); return false; }
+  if (!subcategory) { alert('Please select a subcategory.'); return false; }
+  if (!notes || notes.length < 30) {
+    if (currentInputMode === 'upload') {
+      if (!isFileExtracted) {
+        alert('Please wait for file text extraction to complete, or try a different file.');
+      } else {
+        alert('Extracted text is too short. Please upload a file with more text content.');
+      }
+    } else {
+      alert('Please enter at least 50 characters of notes.');
+    }
+    return false;
+  }
+  return true;
+}
+
+function buildPayload() {
+  return {
+    notes: getNotesText(),
+    title: document.getElementById('notesTitle').value.trim(),
+    category: document.getElementById('notesCategory').value,
+    subcategory: document.getElementById('notesSubcategory').value,
+    difficulty: document.getElementById('notesDifficulty').value
+  };
+}
+
+// ---- Preview ----
+function previewNotesQuiz() {
+  if (!validateForm()) return;
+  setLoading(true);
+
+  fetch('/api/quiz/preview-notes', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(buildPayload())
+  })
+  .then(r => r.json())
+  .then(data => {
+    setLoading(false);
+    if (data.success) {
+      previewedQuiz = data.quiz;
+      const preview = document.getElementById('previewContent');
+      preview.innerHTML = `
+        <p style="margin-bottom:1rem;color:var(--text-secondary)">
+          <strong>${data.quiz.questions.length} questions</strong> generated from your notes
+        </p>` +
+        data.quiz.questions.map((q, i) => `
+          <div class="preview-question">
+            <p><strong>Q${i+1}:</strong> ${q.text}</p>
+            <div class="preview-options">
+              ${q.options.map((opt, j) => `
+                <span class="preview-opt ${j === q.correct ? 'correct' : ''}">
+                  ${'ABCD'[j]}. ${opt}
+                  ${j === q.correct ? ' ✓' : ''}
+                </span>
+              `).join('')}
+            </div>
+          </div>
+        `).join('');
+      document.getElementById('previewSection').classList.remove('hidden');
+      document.getElementById('previewSection').scrollIntoView({ behavior: 'smooth' });
+    } else {
+      alert('Error: ' + (data.errors || ['Unknown error']).join('\n'));
+    }
+  })
+  .catch(() => { setLoading(false); alert('Failed to preview quiz. Please try again.'); });
+}
+
+function hidePreview() {
+  document.getElementById('previewSection').classList.add('hidden');
+}
+
+function confirmCreate() {
+  document.getElementById('notesForm').dispatchEvent(new Event('submit'));
+}
+
+// ---- Submit ----
+document.getElementById('notesForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  if (!validateForm()) return;
+  setLoading(true);
+
+  fetch('/api/quiz/create-from-notes', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(buildPayload())
+  })
+  .then(r => r.json())
+  .then(data => {
+    setLoading(false);
+    if (data.success) {
+      document.getElementById('notesForm').classList.add('hidden');
+      document.getElementById('previewSection').classList.add('hidden');
+      const result = document.getElementById('createResult');
+      result.classList.remove('hidden');
+      document.getElementById('createdQuizLink').href = '/quiz/' + data.quiz_id;
+      result.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      alert('Errors:\n' + (data.errors || ['Unknown error']).join('\n'));
+    }
+  })
+  .catch(() => { setLoading(false); alert('Failed to create quiz. Please try again.'); });
+});
+
+function setLoading(on) {
+  document.getElementById('loadingOverlay').classList.toggle('visible', on);
+}
+</script>
+{% endblock %}

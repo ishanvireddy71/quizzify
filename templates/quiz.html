@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}{{ quiz.title }} - Quizzify{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/quiz.css') }}">
+{% endblock %}
+{% block content %}
+
+<div class="quiz-container" id="quizContainer" data-quiz-id="{{ quiz.id }}" data-mode="{{ mode }}">
+    <div class="quiz-header">
+        <h1 class="quiz-title">{{ quiz.title }}</h1>
+        <div class="quiz-meta-bar">
+            <span class="quiz-mode-badge mode-{{ mode }}">{{ mode|title }}</span>
+            <span class="quiz-difficulty difficulty-{{ quiz.difficulty }}">{{ quiz.difficulty }}</span>
+            {% if quiz.get('daily') %}
+            <span class="daily-badge">🔥 Daily 2×</span>
+            {% endif %}
+            {% if quiz.get('from_notes') %}
+            <span class="notes-badge">📝 From Notes</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="quiz-progress">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <span class="progress-text" id="progressText">1 / {{ quiz.questions|length }}</span>
+    </div>
+
+    {% if mode == 'timed' %}
+    <div class="timer-container">
+        <div class="timer-bar" id="timerBar"><div class="timer-fill" style="width:100%;height:100%;border-radius:3px;transition:width 1s linear,background 1s"></div></div>
+        <span class="timer-text" id="timerText">{{ quiz.time_limit // 60 }}:00</span>
+    </div>
+    {% endif %}
+
+    {% if mode == 'survival' %}
+    <div class="lives-container" id="livesContainer">
+        <span class="lives-label">Lives:</span>
+        <span class="life" id="life1">❤️</span>
+        <span class="life" id="life2">❤️</span>
+        <span class="life" id="life3">❤️</span>
+    </div>
+    {% endif %}
+
+    <div class="quiz-content" id="quizContent">
+        {% for question in quiz.questions %}
+        <div class="question-card {% if loop.index == 1 %}active{% else %}hidden{% endif %}" data-index="{{ loop.index0 }}" data-points="{{ question.points }}">
+            <div class="question-number">Question {{ loop.index }}</div>
+            <h2 class="question-text">{{ question.text }}</h2>
+            <div class="options-grid">
+                {% for option in question.options %}
+                <button class="option-btn" data-index="{{ loop.index0 }}" onclick="selectOption(this)">
+                    <span class="option-label">{{ ['A','B','C','D'][loop.index0] }}</span>
+                    <span class="option-text">{{ option }}</span>
+                </button>
+                {% endfor %}
+            </div>
+            <div class="question-actions">
+                <button class="hint-btn" onclick="useHint()" id="hintBtn">
+                    <span>💡</span> Hint ({{ 3 - loop.index0 }} left)
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="quiz-nav">
+        <button class="nav-btn" id="prevBtn" onclick="prevQuestion()" disabled>← Previous</button>
+        <button class="nav-btn nav-next" id="nextBtn" onclick="nextQuestion()">Next →</button>
+        <button class="nav-btn nav-submit hidden" id="submitBtn" onclick="submitQuiz()">Submit Quiz</button>
+    </div>
+</div>
+
+<div class="quiz-results hidden" id="quizResults">
+    <div class="results-card">
+        <div class="results-header">
+            <h2>Quiz Complete!</h2>
+            <div class="grade-display" id="gradeDisplay">A</div>
+        </div>
+        <div class="results-stats">
+            <div class="result-stat">
+                <span class="stat-value" id="resultScore">0</span>
+                <span class="stat-label">Score</span>
+            </div>
+            <div class="result-stat">
+                <span class="stat-value" id="resultAccuracy">0%</span>
+                <span class="stat-label">Accuracy</span>
+            </div>
+            <div class="result-stat">
+                <span class="stat-value" id="resultStreak">0</span>
+                <span class="stat-label">Best Streak</span>
+            </div>
+            <div class="result-stat">
+                <span class="stat-value" id="resultTime">0s</span>
+                <span class="stat-label">Time</span>
+            </div>
+        </div>
+        <div class="results-breakdown" id="resultsBreakdown"></div>
+        <div class="new-badges hidden" id="newBadges"></div>
+        <div class="results-actions">
+            <a href="{{ url_for('results') }}" class="btn btn-primary">View Detailed Results</a>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Back to Home</a>
+            <button class="btn btn-accent" onclick="shareResult()">Share Score</button>
+        </div>
+    </div>
+</div>
+
+<script type="application/json" id="quiz-data">{{ quiz|tojson }}</script>
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+
+{% endblock %}

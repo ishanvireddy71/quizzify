@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Categories - Quizzify{% endblock %}
+{% block content %}
+
+<section class="page-header">
+    <h1 class="page-title">All Categories</h1>
+    <p class="page-subtitle">Choose your path. Education or Entertainment.</p>
+</section>
+
+<section class="categories-full">
+    {% for cat in categories %}
+    <div class="category-block" style="--cat-color: {{ cat.color }}">
+        <div class="category-header">
+            <div class="category-header-icon">{{ cat.icon }}</div>
+            <div class="category-header-info">
+                <h2>{{ cat.name }}</h2>
+                <p>{{ cat.description }}</p>
+            </div>
+        </div>
+        <div class="subcategories-grid">
+            {% for sub in cat.subcategories %}
+            <a href="{{ url_for('category_detail', cat_id=cat.id) }}#{{ sub.id }}" class="subcategory-card">
+                <span class="sub-icon">{{ sub.icon }}</span>
+                <span class="sub-name">{{ sub.name }}</span>
+                <span class="sub-desc">{{ sub.description }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</section>
+
+{% endblock %}

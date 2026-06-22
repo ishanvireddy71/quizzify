@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}Quizzify - Test Your Knowledge{% endblock %}
+{% block content %}
+
+<section class="hero">
+    <div class="hero-bg">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+    </div>
+    <div class="hero-content">
+        <h1 class="hero-title">
+            <span class="gradient-text">Master Any Topic.</span>
+            <br>One Quiz at a Time.
+        </h1>
+        <p class="hero-subtitle">Explore thousands of quizzes across Education and Entertainment. Create your own, compete on leaderboards, and unlock achievements.</p>
+        <div class="hero-actions">
+            <a href="{{ url_for('categories') }}" class="btn btn-primary btn-lg">Start Quizzing</a>
+            <a href="{{ url_for('create_quiz') }}" class="btn btn-secondary btn-lg">Create a Quiz</a>
+            <a href="{{ url_for('create_from_notes') }}" class="btn btn-accent btn-lg">Quiz from Notes</a>
+        </div>
+        {% if daily_challenge %}
+        <div class="daily-banner">
+            <span class="daily-icon">🔥</span>
+            <div class="daily-info">
+                <span class="daily-label">Daily Challenge</span>
+                <span class="daily-title">{{ daily_challenge.title }}</span>
+            </div>
+            <a href="{{ url_for('daily_challenge') }}" class="btn btn-glow">2× Points</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="stats-bar">
+    <div class="stat-item">
+        <span class="stat-number">{{ stats.quizzes_taken }}</span>
+        <span class="stat-label">Quizzes Taken</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-number">{{ stats.total_score }}</span>
+        <span class="stat-label">Total Score</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-number">{{ stats.max_streak }}</span>
+        <span class="stat-label">Best Streak</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-number">{{ stats.badges|length }}</span>
+        <span class="stat-label">Badges</span>
+    </div>
+</section>
+
+<section class="categories-section">
+    <h2 class="section-title">Explore Categories</h2>
+    <div class="categories-grid">
+        {% for cat in categories %}
+        <a href="{{ url_for('category_detail', cat_id=cat.id) }}" class="category-card" style="--cat-color: {{ cat.color }}">
+            <div class="category-icon">{{ cat.icon }}</div>
+            <h3 class="category-name">{{ cat.name }}</h3>
+            <p class="category-desc">{{ cat.description }}</p>
+            <div class="category-meta">
+                <span>{{ cat.subcategories|length }} subcategories</span>
+                <span class="arrow">→</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+
+{% if featured_quizzes %}
+<section class="featured-section">
+    <h2 class="section-title">Featured Quizzes</h2>
+    <div class="quizzes-grid">
+        {% for quiz in featured_quizzes %}
+        <div class="quiz-card">
+            <div class="quiz-difficulty difficulty-{{ quiz.difficulty }}">{{ quiz.difficulty }}</div>
+            <h3 class="quiz-title">{{ quiz.title }}</h3>
+            <div class="quiz-meta">
+                <span>{{ quiz.questions|length }} questions</span>
+                <span>{{ quiz.time_limit // 60 }} min</span>
+            </div>
+            <a href="{{ url_for('quiz', quiz_id=quiz.id) }}" class="btn btn-primary btn-sm">Take Quiz</a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<section class="leaderboard-section">
+    <h2 class="section-title">Top Players</h2>
+    <div class="leaderboard-preview">
+        {% for entry in leaderboard %}
+        <div class="leaderboard-row {% if loop.index == 1 %}rank-1{% elif loop.index == 2 %}rank-2{% elif loop.index == 3 %}rank-3{% endif %}">
+            <span class="rank">#{{ entry.rank }}</span>
+            <span class="name">{{ entry.username }}</span>
+            <span class="score">{{ entry.total_score }} pts</span>
+        </div>
+        {% endfor %}
+    </div>
+    <a href="{{ url_for('leaderboard') }}" class="btn btn-outline">View Full Leaderboard</a>
+</section>
+
+<section class="features-section">
+    <h2 class="section-title">Why Quizzify?</h2>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">📝</div>
+            <h3>Notes to Quiz</h3>
+            <p>Paste your study notes and instantly generate a personalized quiz to test your knowledge.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🏆</div>
+            <h3>Achievements</h3>
+            <p>Unlock badges, climb the leaderboard, and show off your quiz mastery to the world.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Multiple Modes</h3>
+            <p>Timed, Practice, or Survival mode. Choose how you want to challenge yourself.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🎨</div>
+            <h3>Create & Share</h3>
+            <p>Build custom quizzes with our easy creator and share them with friends.</p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

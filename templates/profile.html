@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}Profile - Quizzify{% endblock %}
+{% block content %}
+
+<section class="page-header">
+    <h1 class="page-title">👤 Profile</h1>
+</section>
+
+<section class="profile-section">
+    <div class="profile-card">
+        <div class="profile-avatar-large">{{ stats.username[0]|upper }}</div>
+        <div class="profile-info">
+            <h2>{{ stats.username }}</h2>
+            <p>Member since {{ stats.quiz_history[0].date[:10] if stats.quiz_history else 'Today' }}</p>
+        </div>
+        <div class="profile-edit">
+            <input type="text" id="newUsername" placeholder="New username" maxlength="20">
+            <button class="btn btn-sm" onclick="updateUsername()">Update</button>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-icon">📝</span>
+            <span class="stat-value">{{ stats.quizzes_taken }}</span>
+            <span class="stat-label">Quizzes Taken</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">⭐</span>
+            <span class="stat-value">{{ stats.total_score }}</span>
+            <span class="stat-label">Total Score</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">🎯</span>
+            <span class="stat-value">{{ stats.correct_answers }}/{{ stats.total_questions }}</span>
+            <span class="stat-label">Correct Answers</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">🔥</span>
+            <span class="stat-value">{{ stats.max_streak }}</span>
+            <span class="stat-label">Best Streak</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">✏️</span>
+            <span class="stat-value">{{ stats.quizzes_created }}</span>
+            <span class="stat-label">Quizzes Created</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-icon">🏅</span>
+            <span class="stat-value">{{ stats.badges|length }}</span>
+            <span class="stat-label">Badges Earned</span>
+        </div>
+    </div>
+
+    {% if stats.quiz_history %}
+    <div class="history-section">
+        <h2 class="section-title">Quiz History</h2>
+        <div class="history-list">
+            {% for h in stats.quiz_history[-10:]|reverse %}
+            <div class="history-item">
+                <span class="h-grade grade-{{ h.grade.replace('+','') }}">{{ h.grade }}</span>
+                <span class="h-score">{{ h.score }} pts</span>
+                <span class="h-acc">{{ h.accuracy }}%</span>
+                <span class="h-date">{{ h.date[:10] }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="badges-section">
+        <h2 class="section-title">Badges</h2>
+        <div class="badges-display">
+            {% for ach in unlocked_achievements %}
+            <div class="badge-item" data-color="{{ ach.color }}">
+                <span class="badge-icon">{{ ach.icon }}</span>
+                <span class="badge-name">{{ ach.name }}</span>
+            </div>
+            {% endfor %}
+            {% for ach in locked_achievements %}
+            <div class="badge-item locked" data-color="#666">
+                <span class="badge-icon">🔒</span>
+                <span class="badge-name">{{ ach.name }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="category-mastery">
+        <h2 class="section-title">Category Mastery</h2>
+        <div class="mastery-list">
+            {% for cat_key, cat_data in stats.category_stats.items() %}
+            <div class="mastery-item">
+                <span class="mastery-name">{{ cat_key.replace('_', ' ')|title }}</span>
+                <div class="mastery-bar">
+                    <div class="mastery-fill" data-width="{{ [cat_data.count * 10, 100]|min }}"></div>
+                </div>
+                <span class="mastery-count">{{ cat_data.count }} quizzes</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<script>
+document.querySelectorAll('.badge-item[data-color]').forEach(function(el) {
+    el.style.setProperty('--badge-color', el.getAttribute('data-color'));
+});
+document.querySelectorAll('.mastery-fill[data-width]').forEach(function(el) {
+    el.style.width = el.getAttribute('data-width') + '%';
+});
+
+function updateUsername() {
+    const username = document.getElementById('newUsername').value.trim();
+    if (!username) return;
+    fetch('/set-username', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({username: username})
+    }).then(r => r.json()).then(data => {
+        if (data.success) location.reload();
+    });
+}
+</script>
+
+{% endblock %}

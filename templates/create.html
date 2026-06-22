@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+{% block title %}Create Quiz - Quizzify{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/create.css') }}">
+{% endblock %}
+{% block content %}
+
+<section class="page-header">
+    <h1 class="page-title">✏️ Create a Quiz</h1>
+    <p class="page-subtitle">Build your own quiz and challenge others.</p>
+</section>
+
+<div class="create-tabs">
+    <a href="{{ url_for('create_quiz') }}" class="create-tab active">Manual Creator</a>
+    <a href="{{ url_for('create_from_notes') }}" class="create-tab">From Notes</a>
+</div>
+
+<section class="create-section">
+    <form id="quizForm" class="quiz-form">
+        <div class="form-group">
+            <label>Quiz Title</label>
+            <input type="text" id="quizTitle" required maxlength="100" placeholder="e.g., World Capitals">
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label>Category</label>
+                <select id="quizCategory" onchange="updateSubcategories()" required>
+                    <option value="">Select Category</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat.id }}">{{ cat.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Subcategory</label>
+                <select id="quizSubcategory" required>
+                    <option value="">Select Subcategory</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Difficulty</label>
+                <select id="quizDifficulty" required>
+                    <option value="easy">Easy</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Time Limit (minutes)</label>
+            <input type="number" id="quizTime" value="10" min="1" max="60">
+        </div>
+
+        <div id="questionsContainer">
+            <div class="question-builder" data-index="0">
+                <div class="qb-header">
+                    <h3>Question 1</h3>
+                    <button type="button" class="btn-remove" onclick="removeQuestion(this)">×</button>
+                </div>
+                <div class="form-group">
+                    <label>Question Text</label>
+                    <input type="text" class="q-text" required placeholder="Enter your question">
+                </div>
+                <div class="options-grid">
+                    <div class="option-input">
+                        <span class="opt-label">A</span>
+                        <input type="text" class="opt-text" required placeholder="Option A">
+                        <input type="radio" name="correct0" value="0" class="correct-radio" required>
+                        <label>Correct</label>
+                    </div>
+                    <div class="option-input">
+                        <span class="opt-label">B</span>
+                        <input type="text" class="opt-text" required placeholder="Option B">
+                        <input type="radio" name="correct0" value="1" class="correct-radio">
+                        <label>Correct</label>
+                    </div>
+                    <div class="option-input">
+                        <span class="opt-label">C</span>
+                        <input type="text" class="opt-text" required placeholder="Option C">
+                        <input type="radio" name="correct0" value="2" class="correct-radio">
+                        <label>Correct</label>
+                    </div>
+                    <div class="option-input">
+                        <span class="opt-label">D</span>
+                        <input type="text" class="opt-text" required placeholder="Option D">
+                        <input type="radio" name="correct0" value="3" class="correct-radio">
+                        <label>Correct</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Points (5-100)</label>
+                    <input type="number" class="q-points" value="10" min="5" max="100">
+                </div>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-secondary" onclick="addQuestion()">+ Add Question</button>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-lg">Create Quiz</button>
+        </div>
+    </form>
+
+    <div id="createResult" class="create-result hidden">
+        <h3>Quiz Created!</h3>
+        <a id="createdQuizLink" href="" class="btn btn-primary">Take Your Quiz</a>
+    </div>
+</section>
+
+<script type="application/json" id="categories-data">{{ categories|tojson }}</script>
+<script>
+const categoriesData = JSON.parse(document.getElementById('categories-data').textContent);
+let questionCount = 1;
+
+function updateSubcategories() {
+    const catId = document.getElementById('quizCategory').value;
+    const subSelect = document.getElementById('quizSubcategory');
+    subSelect.innerHTML = '<option value="">Select Subcategory</option>';
+    
+    const cat = categoriesData.find(c => c.id === catId);
+    if (cat) {
+        cat.subcategories.forEach(sub => {
+            const opt = document.createElement('option');
+            opt.value = sub.id;
+            opt.textContent = sub.name;
+            subSelect.appendChild(opt);
+        });
+    }
+}
+
+function addQuestion() {
+    const container = document.getElementById('questionsContainer');
+    const idx = questionCount;
+    const div = document.createElement('div');
+    div.className = 'question-builder';
+    div.dataset.index = idx;
+    div.innerHTML = `
+        <div class="qb-header">
+            <h3>Question ${idx + 1}</h3>
+            <button type="button" class="btn-remove" onclick="removeQuestion(this)">×</button>
+        </div>
+        <div class="form-group">
+            <label>Question Text</label>
+            <input type="text" class="q-text" required placeholder="Enter your question">
+        </div>
+        <div class="options-grid">
+            <div class="option-input">
+                <span class="opt-label">A</span>
+                <input type="text" class="opt-text" required placeholder="Option A">
+                <input type="radio" name="correct${idx}" value="0" class="correct-radio" required>
+                <label>Correct</label>
+            </div>
+            <div class="option-input">
+                <span class="opt-label">B</span>
+                <input type="text" class="opt-text" required placeholder="Option B">
+                <input type="radio" name="correct${idx}" value="1" class="correct-radio">
+                <label>Correct</label>
+            </div>
+            <div class="option-input">
+                <span class="opt-label">C</span>
+                <input type="text" class="opt-text" required placeholder="Option C">
+                <input type="radio" name="correct${idx}" value="2" class="correct-radio">
+                <label>Correct</label>
+            </div>
+            <div class="option-input">
+                <span class="opt-label">D</span>
+                <input type="text" class="opt-text" required placeholder="Option D">
+                <input type="radio" name="correct${idx}" value="3" class="correct-radio">
+                <label>Correct</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Points (5-100)</label>
+            <input type="number" class="q-points" value="10" min="5" max="100">
+        </div>
+    `;
+    container.appendChild(div);
+    questionCount++;
+}
+
+function removeQuestion(btn) {
+    const builders = document.querySelectorAll('.question-builder');
+    if (builders.length <= 1) {
+        alert('Quiz must have at least 1 question');
+        return;
+    }
+    btn.closest('.question-builder').remove();
+    document.querySelectorAll('.question-builder').forEach((b, i) => {
+        b.dataset.index = i;
+        b.querySelector('h3').textContent = `Question ${i + 1}`;
+        b.querySelectorAll('.correct-radio').forEach(r => {
+            r.name = `correct${i}`;
+        });
+    });
+    questionCount = document.querySelectorAll('.question-builder').length;
+}
+
+document.getElementById('quizForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const questions = [];
+    document.querySelectorAll('.question-builder').forEach((builder, i) => {
+        const text = builder.querySelector('.q-text').value;
+        const options = Array.from(builder.querySelectorAll('.opt-text')).map(o => o.value);
+        const correctRadio = builder.querySelector('input[type="radio"]:checked');
+        const correct = correctRadio ? parseInt(correctRadio.value) : 0;
+        const points = parseInt(builder.querySelector('.q-points').value) || 10;
+        
+        questions.push({
+            id: `q${i+1}`,
+            text: text,
+            options: options,
+            correct: correct,
+            points: points
+        });
+    });
+    
+    const quizData = {
+        title: document.getElementById('quizTitle').value,
+        category: document.getElementById('quizCategory').value,
+        subcategory: document.getElementById('quizSubcategory').value,
+        difficulty: document.getElementById('quizDifficulty').value,
+        time_limit: parseInt(document.getElementById('quizTime').value) * 60,
+        questions: questions
+    };
+    
+    fetch('/api/quiz/create', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(quizData)
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('quizForm').classList.add('hidden');
+            document.getElementById('createResult').classList.remove('hidden');
+            document.getElementById('createdQuizLink').href = '/quiz/' + data.quiz_id;
+        } else {
+            alert('Errors: ' + data.errors.join(', '));
+        }
+    });
+});
+</script>
+
+{% endblock %}

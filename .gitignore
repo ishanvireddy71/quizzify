@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+*.egg-info/
+dist/
+build/
+*.log
+.DS_Store
+data/*.json
+!data/quizzes.json
+!data/categories.json
+!data/achievements.json

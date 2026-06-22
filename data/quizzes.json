@@ -1,0 +1,612 @@
+{
+  "quizzes": [
+    {
+      "id": "quiz_math_01",
+      "title": "Algebra Essentials",
+      "category": "education",
+      "subcategory": "math",
+      "difficulty": "medium",
+      "time_limit": 600,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "What is the value of x in 2x + 5 = 15?",
+          "options": [
+            "4",
+            "5",
+            "6",
+            "7"
+          ],
+          "correct": 1,
+          "points": 10
+        },
+        {
+          "id": "q2",
+          "text": "Factor: x² - 9",
+          "options": [
+            "(x-3)(x+3)",
+            "(x-9)(x+1)",
+            "(x-3)²",
+            "(x+3)²"
+          ],
+          "correct": 0,
+          "points": 15
+        },
+        {
+          "id": "q3",
+          "text": "Solve: 3(x - 2) = 2x + 4",
+          "options": [
+            "8",
+            "10",
+            "6",
+            "12"
+          ],
+          "correct": 1,
+          "points": 10
+        },
+        {
+          "id": "q4",
+          "text": "What is the discriminant of x² + 4x + 4 = 0?",
+          "options": [
+            "16",
+            "0",
+            "8",
+            "-8"
+          ],
+          "correct": 1,
+          "points": 20
+        },
+        {
+          "id": "q5",
+          "text": "If f(x) = 2x² - 3x + 1, what is f(2)?",
+          "options": [
+            "3",
+            "5",
+            "7",
+            "9"
+          ],
+          "correct": 0,
+          "points": 15
+        }
+      ]
+    },
+    {
+      "id": "quiz_science_01",
+      "title": "Physics Fundamentals",
+      "category": "education",
+      "subcategory": "science",
+      "difficulty": "hard",
+      "time_limit": 480,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "What is the SI unit of electric current?",
+          "options": [
+            "Volt",
+            "Ampere",
+            "Ohm",
+            "Watt"
+          ],
+          "correct": 1,
+          "points": 10
+        },
+        {
+          "id": "q2",
+          "text": "At what speed does light travel in a vacuum?",
+          "options": [
+            "3 × 10⁸ m/s",
+            "3 × 10⁶ m/s",
+            "3 × 10¹⁰ m/s",
+            "3 × 10⁴ m/s"
+          ],
+          "correct": 0,
+          "points": 10
+        },
+        {
+          "id": "q3",
+          "text": "Which particle has a negative charge?",
+          "options": [
+            "Proton",
+            "Neutron",
+            "Electron",
+            "Photon"
+          ],
+          "correct": 2,
+          "points": 10
+        },
+        {
+          "id": "q4",
+          "text": "What is Newton's Second Law formula?",
+          "options": [
+            "F = ma",
+            "E = mc²",
+            "V = IR",
+            "P = mv"
+          ],
+          "correct": 0,
+          "points": 15
+        },
+        {
+          "id": "q5",
+          "text": "What is the acceleration due to gravity on Earth?",
+          "options": [
+            "8.9 m/s²",
+            "9.8 m/s²",
+            "10.2 m/s²",
+            "9.2 m/s²"
+          ],
+          "correct": 1,
+          "points": 10
+        }
+      ]
+    },
+    {
+      "id": "quiz_history_01",
+      "title": "World War II",
+      "category": "education",
+      "subcategory": "history",
+      "difficulty": "medium",
+      "time_limit": 600,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "In which year did World War II begin?",
+          "options": [
+            "1938",
+            "1939",
+            "1940",
+            "1941"
+          ],
+          "correct": 1,
+          "points": 10
+        },
+        {
+          "id": "q2",
+          "text": "Which country was invaded first, starting WWII in Europe?",
+          "options": [
+            "France",
+            "Poland",
+            "Czechoslovakia",
+            "Austria"
+          ],
+          "correct": 1,
+          "points": 10
+        },
+        {
+          "id": "q3",
+          "text": "Who was the British Prime Minister during most of WWII?",
+          "options": [
+            "Neville Chamberlain",
+            "Winston Churchill",
+            "Clement Attlee",
+            "Anthony Eden"
+          ],
+          "correct": 1,
+          "points": 15
+        },
+        {
+          "id": "q4",
+          "text": "What was the code name for the D-Day invasion?",
+          "options": [
+            "Operation Barbarossa",
+            "Operation Overlord",
+            "Operation Market Garden",
+            "Operation Torch"
+          ],
+          "correct": 1,
+          "points": 20
+        },
+        {
+          "id": "q5",
+          "text": "Which two cities were hit by atomic bombs in 1945?",
+          "options": [
+            "Tokyo and Osaka",
+            "Hiroshima and Nagasaki",
+            "Kyoto and Yokohama",
+            "Nagasaki and Kobe"
+          ],
+          "correct": 1,
+          "points": 15
+        }
+      ]
+    },
+    {
+      "id": "quiz_prog_01",
+      "title": "Python Mastery",
+      "category": "education",
+      "subcategory": "programming",
+      "difficulty": "hard",
+      "time_limit": 540,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "What does list comprehension [x for x in range(5)] produce?",
+          "options": [
+            "[1,2,3,4,5]",
+            "[0,1,2,3,4]",
+            "[0,1,2,3,4,5]",
+            "Error"
+          ],
+          "correct": 1,
+          "points": 10
+        },
+        {
+          "id": "q2",
+          "text": "What is the output of print(2 ** 3 ** 2)?",
+          "options": [
+            "64",
+            "512",
+            "36",
+            "Error"
+          ],
+          "correct": 1,
+          "points": 15
+        },
+        {
+          "id": "q3",
+          "text": "Which decorator is used for static methods in Python?",
+          "options": [
+            "@classmethod",
+            "@staticmethod",
+            "@property",
+            "@abstractmethod"
+          ],
+          "correct": 1,
+          "points": 10
+        },
+        {
+          "id": "q4",
+          "text": "What is a Python generator object?",
+          "options": [
+            "A list",
+            "An iterator",
+            "A dictionary",
+            "A tuple"
+          ],
+          "correct": 1,
+          "points": 15
+        },
+        {
+          "id": "q5",
+          "text": "What does the 'with' statement ensure?",
+          "options": [
+            "Type checking",
+            "Context management",
+            "Exception handling",
+            "Memory allocation"
+          ],
+          "correct": 1,
+          "points": 10
+        }
+      ]
+    },
+    {
+      "id": "quiz_games_01",
+      "title": "Legend of Zelda Trivia",
+      "category": "entertainment",
+      "subcategory": "video_games",
+      "difficulty": "medium",
+      "time_limit": 600,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "What is the name of Link's sword?",
+          "options": [
+            "Buster Sword",
+            "Master Sword",
+            "Iron Sword",
+            "Hero Sword"
+          ],
+          "correct": 1,
+          "points": 10
+        },
+        {
+          "id": "q2",
+          "text": "In which game did Link first appear in 3D?",
+          "options": [
+            "Ocarina of Time",
+            "Majora's Mask",
+            "Wind Waker",
+            "Twilight Princess"
+          ],
+          "correct": 0,
+          "points": 15
+        },
+        {
+          "id": "q3",
+          "text": "What is the princess's name in the series?",
+          "options": [
+            "Zelda",
+            "Link",
+            "Ganon",
+            "Midna"
+          ],
+          "correct": 0,
+          "points": 10
+        },
+        {
+          "id": "q4",
+          "text": "What is the currency used in Hyrule?",
+          "options": [
+            "Gil",
+            "Rupee",
+            "Coin",
+            "Gem"
+          ],
+          "correct": 1,
+          "points": 10
+        },
+        {
+          "id": "q5",
+          "text": "Which instrument does Link play in Ocarina of Time?",
+          "options": [
+            "Flute",
+            "Ocarina",
+            "Harp",
+            "Drum"
+          ],
+          "correct": 1,
+          "points": 10
+        }
+      ]
+    },
+    {
+      "id": "quiz_movies_01",
+      "title": "Marvel Cinematic Universe",
+      "category": "entertainment",
+      "subcategory": "movies",
+      "difficulty": "easy",
+      "time_limit": 480,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Who is the first Avenger?",
+          "options": [
+            "Iron Man",
+            "Captain America",
+            "Thor",
+            "Hulk"
+          ],
+          "correct": 1,
+          "points": 10
+        },
+        {
+          "id": "q2",
+          "text": "What is the name of Thor's hammer?",
+          "options": [
+            "Stormbreaker",
+            "Mjolnir",
+            "Gungnir",
+            "Jarnbjorn"
+          ],
+          "correct": 1,
+          "points": 10
+        },
+        {
+          "id": "q3",
+          "text": "Which Infinity Stone is inside Vision?",
+          "options": [
+            "Mind Stone",
+            "Soul Stone",
+            "Time Stone",
+            "Reality Stone"
+          ],
+          "correct": 0,
+          "points": 15
+        },
+        {
+          "id": "q4",
+          "text": "What is the real name of Black Panther?",
+          "options": [
+            "T'Challa",
+            "M'Baku",
+            "Killmonger",
+            "Shuri"
+          ],
+          "correct": 0,
+          "points": 10
+        },
+        {
+          "id": "q5",
+          "text": "Which actor plays Tony Stark / Iron Man?",
+          "options": [
+            "Chris Evans",
+            "Chris Hemsworth",
+            "Robert Downey Jr.",
+            "Mark Ruffalo"
+          ],
+          "correct": 2,
+          "points": 10
+        }
+      ]
+    },
+    {
+      "id": "quiz_music_01",
+      "title": "Pop Music Legends",
+      "category": "entertainment",
+      "subcategory": "music",
+      "difficulty": "easy",
+      "time_limit": 420,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "Who is known as the 'King of Pop'?",
+          "options": [
+            "Elvis Presley",
+            "Michael Jackson",
+            "Prince",
+            "Madonna"
+          ],
+          "correct": 1,
+          "points": 10
+        },
+        {
+          "id": "q2",
+          "text": "Which band released 'Bohemian Rhapsody'?",
+          "options": [
+            "The Beatles",
+            "Queen",
+            "Led Zeppelin",
+            "Pink Floyd"
+          ],
+          "correct": 1,
+          "points": 10
+        },
+        {
+          "id": "q3",
+          "text": "What was Taylor Swift's debut album?",
+          "options": [
+            "Fearless",
+            "Taylor Swift",
+            "Speak Now",
+            "Red"
+          ],
+          "correct": 1,
+          "points": 15
+        },
+        {
+          "id": "q4",
+          "text": "Which artist has the most Grammy wins of all time?",
+          "options": [
+            "Beyoncé",
+            "Jay-Z",
+            "Quincy Jones",
+            "Stevie Wonder"
+          ],
+          "correct": 0,
+          "points": 20
+        },
+        {
+          "id": "q5",
+          "text": "What instrument did Jimi Hendrix famously play?",
+          "options": [
+            "Piano",
+            "Drums",
+            "Guitar",
+            "Saxophone"
+          ],
+          "correct": 2,
+          "points": 10
+        }
+      ]
+    },
+    {
+      "id": "quiz_anime_01",
+      "title": "Naruto Universe",
+      "category": "entertainment",
+      "subcategory": "anime",
+      "difficulty": "medium",
+      "time_limit": 540,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "What is Naruto's signature jutsu?",
+          "options": [
+            "Chidori",
+            "Rasengan",
+            "Amaterasu",
+            "Shadow Clone"
+          ],
+          "correct": 1,
+          "points": 10
+        },
+        {
+          "id": "q2",
+          "text": "Which village is Naruto from?",
+          "options": [
+            "Sand Village",
+            "Leaf Village",
+            "Mist Village",
+            "Cloud Village"
+          ],
+          "correct": 1,
+          "points": 10
+        },
+        {
+          "id": "q3",
+          "text": "Who is the Nine-Tails fox sealed inside?",
+          "options": [
+            "Sasuke",
+            "Naruto",
+            "Gaara",
+            "Killer Bee"
+          ],
+          "correct": 1,
+          "points": 10
+        },
+        {
+          "id": "q4",
+          "text": "What is the name of Kakashi's Sharingan ability?",
+          "options": [
+            "Kamui",
+            "Tsukuyomi",
+            "Susanoo",
+            "Izanagi"
+          ],
+          "correct": 0,
+          "points": 20
+        },
+        {
+          "id": "q5",
+          "text": "Who becomes the Seventh Hokage?",
+          "options": [
+            "Sasuke",
+            "Naruto",
+            "Kakashi",
+            "Shikamaru"
+          ],
+          "correct": 1,
+          "points": 10
+        }
+      ]
+    },
+    {
+      "title": "capitals",
+      "category": "education",
+      "subcategory": "history",
+      "difficulty": "easy",
+      "time_limit": 60,
+      "questions": [
+        {
+          "id": "q1",
+          "text": "what is india's capital",
+          "options": [
+            "hyderabad",
+            "delhi",
+            "mumbai",
+            "chennai"
+          ],
+          "correct": 1,
+          "points": 10
+        },
+        {
+          "id": "q2",
+          "text": "which is the smallest reptile?",
+          "options": [
+            "dolphin",
+            "alligator",
+            "crocodile",
+            "tortoise"
+          ],
+          "correct": 0,
+          "points": 10
+        },
+        {
+          "id": "q3",
+          "text": "2+2",
+          "options": [
+            "6",
+            "22",
+            "4",
+            "10"
+          ],
+          "correct": 2,
+          "points": 10
+        }
+      ],
+      "id": "custom_6029e150",
+      "created_at": "2026-06-10T10:17:44.530156",
+      "creator": "Player_3729"
+    }
+  ]
+}

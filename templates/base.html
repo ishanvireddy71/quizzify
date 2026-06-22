@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{ theme }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Quizzify{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    {% block extra_css %}{% endblock %}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <a href="{{ url_for('index') }}">
+                <span class="logo-icon">🎯</span>
+                <span class="logo-text">Quizzify</span>
+            </a>
+        </div>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+            <a href="{{ url_for('categories') }}" class="nav-link">Categories</a>
+            <a href="{{ url_for('leaderboard') }}" class="nav-link">Leaderboard</a>
+            <a href="{{ url_for('achievements') }}" class="nav-link">Achievements</a>
+            <a href="{{ url_for('create_quiz') }}" class="nav-link nav-cta">Create Quiz</a>
+        </div>
+        <div class="nav-actions">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
+                <span id="theme-icon">{{ '☀️' if theme == 'dark' else '🌙' }}</span>
+            </button>
+            <a href="{{ url_for('profile') }}" class="profile-btn">
+                <span class="profile-avatar">👤</span>
+                <span class="profile-name">{{ session.get('username', 'Guest') }}</span>
+            </a>
+        </div>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+    </nav>
+
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('categories') }}">Categories</a>
+        <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
+        <a href="{{ url_for('achievements') }}">Achievements</a>
+        <a href="{{ url_for('create_quiz') }}">Create Quiz</a>
+        <a href="{{ url_for('profile') }}">Profile</a>
+    </div>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p> Quizzify. Test your knowledge. Challenge the world.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleTheme() {
+            fetch('/toggle-theme', {method: 'POST'})
+                .then(r => r.json())
+                .then(data => {
+                    document.documentElement.setAttribute('data-theme', data.theme);
+                    document.getElementById('theme-icon').textContent = data.theme === 'dark' ? '☀️' : '🌙';
+                });
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('active');
+        }
+
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('mobileMenu');
+            const btn = document.querySelector('.mobile-menu-btn');
+            if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.classList.remove('active');
+            }
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,94 @@
+{
+  "categories": [
+    {
+      "id": "education",
+      "name": "Education",
+      "icon": "📚",
+      "color": "#6366f1",
+      "description": "Learn, test your knowledge, and grow.",
+      "subcategories": [
+        {
+          "id": "math",
+          "name": "Mathematics",
+          "icon": "🔢",
+          "description": "Algebra, Calculus, Geometry, and more."
+        },
+        {
+          "id": "science",
+          "name": "Science",
+          "icon": "🔬",
+          "description": "Physics, Chemistry, Biology, and beyond."
+        },
+        {
+          "id": "history",
+          "name": "History",
+          "icon": "🏛️",
+          "description": "World history, civilizations, and events."
+        },
+        {
+          "id": "literature",
+          "name": "Literature",
+          "icon": "📖",
+          "description": "Classics, poetry, and modern works."
+        },
+        {
+          "id": "programming",
+          "name": "Programming",
+          "icon": "💻",
+          "description": "Code, algorithms, and software engineering."
+        },
+        {
+          "id": "languages",
+          "name": "Languages",
+          "icon": "🌍",
+          "description": "Vocabulary, grammar, and fluency tests."
+        }
+      ]
+    },
+    {
+      "id": "entertainment",
+      "name": "Entertainment",
+      "icon": "🎮",
+      "color": "#ec4899",
+      "description": "Gaming, movies, music, and pop culture.",
+      "subcategories": [
+        {
+          "id": "video_games",
+          "name": "Video Games",
+          "icon": "🕹️",
+          "description": "Trivia from AAA titles to indie gems."
+        },
+        {
+          "id": "movies",
+          "name": "Movies & TV",
+          "icon": "🎬",
+          "description": "Blockbusters, series, and cult classics."
+        },
+        {
+          "id": "music",
+          "name": "Music",
+          "icon": "🎵",
+          "description": "Artists, albums, genres, and lyrics."
+        },
+        {
+          "id": "sports",
+          "name": "Sports",
+          "icon": "⚽",
+          "description": "Football, cricket, esports, and athletics."
+        },
+        {
+          "id": "anime",
+          "name": "Anime & Manga",
+          "icon": "⛩️",
+          "description": "Japanese animation and comic culture."
+        },
+        {
+          "id": "memes",
+          "name": "Internet Culture",
+          "icon": "😂",
+          "description": "Memes, viral trends, and internet lore."
+        }
+      ]
+    }
+  ]
+}

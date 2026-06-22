@@ -1,0 +1,240 @@
+.create-tabs {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+  
+  .create-tab {
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    transition: var(--transition);
+  }
+  
+  .create-tab.active {
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));
+    color: white;
+    border-color: transparent;
+  }
+  
+  .create-tab:hover:not(.active) { border-color: var(--accent-purple); }
+  
+  .create-section {
+    max-width: 800px;
+    margin: 0 auto 4rem;
+    padding: 0 2rem;
+  }
+  
+  .quiz-form, .notes-form {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+  }
+  
+  .form-group { margin-bottom: 1.5rem; }
+  
+  .form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: var(--font);
+    font-size: 1rem;
+    transition: var(--transition);
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+  }
+  
+  .form-group small {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+  
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  
+  .question-builder {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .qb-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .qb-header h3 { font-size: 1rem; }
+  
+  .btn-remove {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: var(--accent-red);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+  }
+  
+  .btn-remove:hover { background: rgba(239, 68, 68, 0.2); transform: scale(1.1); }
+  
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .option-input {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--bg-primary);
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+  }
+  
+  .option-input .opt-label {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-purple);
+    color: white;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+  
+  .option-input input[type="text"] {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-family: var(--font);
+    padding: 0.25rem;
+  }
+  
+  .option-input input[type="text"]:focus { outline: none; }
+  
+  .option-input input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent-green);
+  }
+  
+  .option-input label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+  
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+  
+  .form-actions .btn { min-width: 160px; }
+  
+  .create-result {
+    text-align: center;
+    padding: 3rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  
+  .create-result h3 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+  
+  .preview-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    margin-top: 2rem;
+  }
+  
+  .preview-section h3 { margin-bottom: 1.5rem; }
+  
+  .preview-question {
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  
+  .preview-question p { margin-bottom: 0.75rem; font-weight: 500; }
+  
+  .preview-options {
+    display: grid;
+    gap: 0.5rem;
+  }
+  
+  .preview-opt {
+    padding: 0.5rem 0.75rem;
+    background: var(--bg-primary);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+  }
+  
+  .preview-opt.correct {
+    background: rgba(34, 197, 94, 0.2);
+    border: 1px solid var(--accent-green);
+    color: var(--accent-green);
+    font-weight: 600;
+  }
+  
+  .preview-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+  
+  @media (max-width: 768px) {
+    .form-row { grid-template-columns: 1fr; }
+    .options-grid { grid-template-columns: 1fr; }
+    .create-section { padding: 0 1rem; }
+    .quiz-form, .notes-form { padding: 1.5rem; }
+  }

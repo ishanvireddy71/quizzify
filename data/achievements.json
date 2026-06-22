@@ -1,0 +1,84 @@
+{
+  "achievements": [
+    {
+      "id": "first_blood",
+      "name": "First Blood",
+      "description": "Complete your first quiz.",
+      "icon": "🩸",
+      "color": "#ef4444",
+      "condition": "quizzes_taken >= 1"
+    },
+    {
+      "id": "perfect_score",
+      "name": "Perfect Score",
+      "description": "Get 100% on any quiz.",
+      "icon": "💯",
+      "color": "#22c55e",
+      "condition": "accuracy == 100"
+    },
+    {
+      "id": "speed_demon",
+      "name": "Speed Demon",
+      "description": "Finish a quiz in under 50% of the time limit.",
+      "icon": "⚡",
+      "color": "#f59e0b",
+      "condition": "time_ratio < 0.5"
+    },
+    {
+      "id": "streak_master",
+      "name": "Streak Master",
+      "description": "Answer 10 questions correctly in a row.",
+      "icon": "🔥",
+      "color": "#f97316",
+      "condition": "max_streak >= 10"
+    },
+    {
+      "id": "category_master",
+      "name": "Category Master",
+      "description": "Complete at least 5 quizzes in one category.",
+      "icon": "🏆",
+      "color": "#8b5cf6",
+      "condition": "category_quizzes >= 5"
+    },
+    {
+      "id": "night_owl",
+      "name": "Night Owl",
+      "description": "Complete a quiz between 12 AM and 5 AM.",
+      "icon": "🌙",
+      "color": "#6366f1",
+      "condition": "hour >= 0 and hour < 5"
+    },
+    {
+      "id": "quiz_creator",
+      "name": "Quiz Creator",
+      "description": "Create your first custom quiz.",
+      "icon": "✏️",
+      "color": "#ec4899",
+      "condition": "quizzes_created >= 1"
+    },
+    {
+      "id": "centurion",
+      "name": "Centurion",
+      "description": "Score over 1000 total points.",
+      "icon": "🛡️",
+      "color": "#14b8a6",
+      "condition": "total_score >= 1000"
+    },
+    {
+      "id": "daily_warrior",
+      "name": "Daily Warrior",
+      "description": "Complete the daily challenge.",
+      "icon": "📅",
+      "color": "#06b6d4",
+      "condition": "daily_completed == true"
+    },
+    {
+      "id": "educator",
+      "name": "Educator",
+      "description": "Create a quiz from your own notes.",
+      "icon": "📚",
+      "color": "#6366f1",
+      "condition": "notes_quiz_created == true"
+    }
+  ]
+}

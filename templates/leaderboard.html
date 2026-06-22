@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Leaderboard - Quizzify{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/leaderboard.css') }}">
+{% endblock %}
+{% block content %}
+
+<section class="page-header">
+    <h1 class="page-title">🏆 Leaderboard</h1>
+    <p class="page-subtitle">The best of the best. Can you make it to the top?</p>
+</section>
+
+<section class="leaderboard-section-full">
+    <div class="leaderboard-table">
+        <div class="lb-header">
+            <span>Rank</span>
+            <span>Player</span>
+            <span>Score</span>
+            <span>Quizzes</span>
+            <span>Accuracy</span>
+            <span>Streak</span>
+            <span>Badges</span>
+        </div>
+        {% for entry in leaderboard %}
+        <div class="lb-row {% if loop.index <= 3 %}top-rank rank-{{ loop.index }}{% endif %}">
+            <span class="lb-rank">
+                {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% else %}#{{ entry.rank }}{% endif %}
+            </span>
+            <span class="lb-name">{{ entry.username }}</span>
+            <span class="lb-score">{{ entry.total_score }}</span>
+            <span class="lb-quizzes">{{ entry.quizzes_taken }}</span>
+            <span class="lb-accuracy">{{ entry.accuracy }}%</span>
+            <span class="lb-streak">{{ entry.streak }}</span>
+            <span class="lb-badges">
+                {% for badge in entry.badges[:3] %}
+                <span class="lb-badge" title="{{ badge }}">{{ badge[0]|upper }}</span>
+                {% endfor %}
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="your-stats-card">
+        <h3>Your Stats</h3>
+        <div class="your-stats-grid">
+            <div class="ys-item">
+                <span class="ys-value">{{ user_entry.total_score }}</span>
+                <span class="ys-label">Score</span>
+            </div>
+            <div class="ys-item">
+                <span class="ys-value">{{ user_entry.quizzes_taken }}</span>
+                <span class="ys-label">Quizzes</span>
+            </div>
+            <div class="ys-item">
+                <span class="ys-value">{{ user_entry.accuracy }}%</span>
+                <span class="ys-label">Accuracy</span>
+            </div>
+            <div class="ys-item">
+                <span class="ys-value">{{ user_entry.streak }}</span>
+                <span class="ys-label">Best Streak</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

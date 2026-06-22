@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Results - Quizzify{% endblock %}
+{% block content %}
+
+<section class="page-header">
+    <h1 class="page-title">Quiz Results</h1>
+</section>
+
+{% if result %}
+<div class="results-detailed">
+    <div class="results-summary-card">
+        <div class="grade-circle grade-{{ result.grade.replace('+','') }}">
+            <span class="grade-letter">{{ result.grade }}</span>
+            <span class="grade-label">Grade</span>
+        </div>
+        <div class="summary-stats">
+            <div class="sum-stat">
+                <span class="sum-value">{{ result.total_score }}</span>
+                <span class="sum-label">Total Score</span>
+            </div>
+            <div class="sum-stat">
+                <span class="sum-value">{{ result.accuracy }}%</span>
+                <span class="sum-label">Accuracy</span>
+            </div>
+            <div class="sum-stat">
+                <span class="sum-value">{{ result.correct_count }}/{{ result.total_questions }}</span>
+                <span class="sum-label">Correct</span>
+            </div>
+            <div class="sum-stat">
+                <span class="sum-value">{{ result.max_streak }}</span>
+                <span class="sum-label">Max Streak</span>
+            </div>
+        </div>
+        <div class="bonus-breakdown">
+            <div class="bonus-item">
+                <span>Base Points</span>
+                <span>+{{ result.base_points }}</span>
+            </div>
+            {% if result.time_bonus > 0 %}
+            <div class="bonus-item">
+                <span>Time Bonus</span>
+                <span class="bonus-pos">+{{ result.time_bonus }}</span>
+            </div>
+            {% endif %}
+            {% if result.accuracy_bonus > 0 %}
+            <div class="bonus-item">
+                <span>Accuracy Bonus</span>
+                <span class="bonus-pos">+{{ result.accuracy_bonus }}</span>
+            </div>
+            {% endif %}
+            {% if result.get('daily_multiplier') %}
+            <div class="bonus-item">
+                <span>Daily 2× Multiplier</span>
+                <span class="bonus-pos">×2</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <h2 class="section-title">Answer Breakdown</h2>
+    <div class="answers-list">
+        {% for detail in result.answers_detail %}
+        <div class="answer-detail-card {% if detail.is_correct %}correct{% else %}wrong{% endif %}">
+            <div class="answer-header">
+                <span class="q-num">Q{{ detail.question_index + 1 }}</span>
+                <span class="q-status">{{ '✓ Correct' if detail.is_correct else '✗ Wrong' }}</span>
+                <span class="q-points">{{ detail.points }} pts</span>
+            </div>
+            <p class="q-text">{{ detail.question_text }}</p>
+            <div class="answer-options">
+                {% for opt in detail.options %}
+                <div class="opt-row 
+                    {% if loop.index0 == detail.correct_option %}correct-opt
+                    {% elif loop.index0 == detail.selected_option and not detail.is_correct %}wrong-opt
+                    {% elif loop.index0 == detail.selected_option %}selected-opt{% endif %}">
+                    <span class="opt-label">{{ ['A','B','C','D'][loop.index0] }}</span>
+                    <span class="opt-text">{{ opt }}</span>
+                    {% if loop.index0 == detail.correct_option %}<<span class="opt-check">✓</span>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="results-actions-bar">
+        <a href="{{ url_for('index') }}" class="btn btn-primary">Take Another Quiz</a>
+        <a href="{{ url_for('leaderboard') }}" class="btn btn-secondary">View Leaderboard</a>
+    </div>
+</div>
+{% else %}
+<div class="no-results">
+    <p>No results to display. <a href="{{ url_for('index') }}">Take a quiz first!</a></p>
+</div>
+{% endif %}
+
+{% endblock %}

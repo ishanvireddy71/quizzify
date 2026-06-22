@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Achievements - Quizzify{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>🏆 Achievements</h1>
+    <p>Unlock them all. {{ stats.badges | length }} / {{ achievements | length }} earned.</p>
+</div>
+
+<div class="achievements-grid">
+    {% for ach in achievements %}
+    <div class="achievement-card {% if ach.unlocked %}unlocked{% else %}locked{% endif %}">
+        <div class="achievement-icon">{{ ach.icon }}</div>
+        <h3>{{ ach.name }}</h3>
+        <p>{{ ach.description }}</p>
+        {% if ach.unlocked %}
+        <span class="badge badge-unlocked">✓ UNLOCKED</span>
+        {% else %}
+        <span class="badge badge-locked">🔒 LOCKED</span>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
